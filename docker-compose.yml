@@ -1,0 +1,38 @@
+version: "2"
+
+services:
+    db:
+        image: mysql:5.7
+        volumes:
+            - ./data/db:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: my_wordpress
+            MYSQL_DATABASE: my_wordpress
+            MYSQL_USER: my_wordpress
+            MYSQL_PASSWORD: my_wordpress
+        restart: always
+        
+
+    wordpress:
+        image: wordpress:latest
+        ports:
+            - "8080:80"
+        depends_on:
+            - db
+        links:
+            - db
+        volumes:
+            - ./themes/my-wordpress:/var/www/html/wp-content/themes/my-wordpress
+            - ./plugins:/var/www/html/wp-content/plugins
+        environment:
+            WORDPRESS_DB_HOST: db:3306
+            WORDPRESS_DB_NAME: my_wordpress
+            WORDPRESS_DB_USER: my_wordpress
+            WORDPRESS_DB_PASSWORD: my_wordpress
+            WORDPRESS_ADMIN_USER: admin
+            WORDPRESS_ADMIN_PASS: admin
+            WORDPRESS_SITE_NAME: nozanoza 
+            WORDPRESS_SITE_DESCRIPTION: 自分用のサイトです
+
+volumes:
+    db-data:
